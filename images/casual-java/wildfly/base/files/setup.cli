@@ -1,0 +1,32 @@
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+set CASUAL_VERSION=${env.CASUAL_VERSION}
+set CASUAL_HOST=${env.CASUAL_HOST}
+set CASUAL_PORT=${env.CASUAL_PORT}
+
+
+# delete ExampleDS
+/subsystem=datasources/data-source=ExampleDS:remove()
+/subsystem=ee/service=default-bindings:write-attribute(name=datasource,value=undefined)
+
+# Global module
+/subsystem=ee:list-add(name=global-modules, value={name=se.laz.casual})
+
+# configure casual RA
+set baseNode=/subsystem=resource-adapters/resource-adapter=casual-jca
+$baseNode:add(archive=casual-jca-app-$CASUAL_VERSION.ear#casual-jca.rar,transaction-support=XATransaction)
+
+set connectionDefinitionNode=$baseNode/connection-definitions=casual-pool
+$connectionDefinitionNode:add(\
+    class-name=se.laz.casual.jca.CasualManagedConnectionFactory,\
+    jndi-name=eis/casualConnectionFactoryDefault,\
+    min-pool-size=20, initial-pool-size=20, max-pool-size=20,\
+    enabled=true)
+
+$connectionDefinitionNode/config-properties=HostName:add(value=$CASUAL_HOST)
+$connectionDefinitionNode/config-properties=PortNumber:add(value=$CASUAL_PORT)
+
+deploy /opt/jboss/wildfly/casual-jca-app-${env.CASUAL_VERSION}.ear
+deploy /opt/jboss/wildfly/casual-caller-app-${env.CASUAL_CALLER_VERSION}.ear
+
+stop-embedded-server

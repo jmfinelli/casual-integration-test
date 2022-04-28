@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wildfly-and-casual
+  labels:
+    app: wildfly-and-casual
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wildfly-and-casual
+  template:
+    metadata:
+      labels:
+        app: wildfly-and-casual
+    spec:
+      containers:
+      - name: wildfly
+        image: wildfly-casual-java-test-application:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7772
+        - containerPort: 9990
+        - containerPort: 8080
+        - containerPort: 8787
+      - name: casual
+        image: casual-domain:latest
+        securityContext:
+          capabilities:
+            add:
+              - SYS_PTRACE
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7771
+        env:
+          - name: CASUAL_LOG
+            value: error|warning

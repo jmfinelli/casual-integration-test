@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wls-and-casual
+  labels:
+    app: wls-and-casual
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wls-and-casual
+  template:
+    metadata:
+      labels:
+        app: wls-and-casual
+    spec:
+      containers:
+      - name: wls
+        image: casual-weblogic-jca:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7001
+        - containerPort: 7772
+        - containerPort: 5557
+      - name: casual
+        image: casual-domain:latest
+        securityContext:
+          capabilities:
+            add:
+              - SYS_PTRACE
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7771
+        env:
+          - name: CASUAL_LOG
+            value: warning|error

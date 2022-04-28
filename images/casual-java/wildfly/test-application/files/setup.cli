@@ -1,0 +1,6 @@
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+# configure test application datasource
+data-source add --name=order --driver-name=h2 --enabled=true --jndi-name=java:jboss/datasources/order --connection-url=jdbc:h2:mem:order;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false --user-name=sa --password=sa --use-java-context=true --statistics-enabled=${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}
+
+stop-embedded-server

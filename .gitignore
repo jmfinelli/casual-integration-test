@@ -12,3 +12,23 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+# gradle/java #
+[Bb]uild/
+.idea/
+*.iml
+*.class
+*.jar
+.gradle/
+
+# emacs #
+*~
+*.orig
+dist/
+out/
+
+# Archives #
+*.zip
+*.tar.*
+*.loc
+*.file
