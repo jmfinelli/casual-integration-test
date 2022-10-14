@@ -20,31 +20,31 @@
     </variable>
     <variable>
       <name>PoolParams_MaxCapacity_16037199636420</name>
-      <value>20</value>
+      <value>100</value>
     </variable>
     <variable>
       <name>PoolParams_ConnectionReserveTimeoutSeconds_16037199636421</name>
-      <value>-1</value>
-    </variable>
+      <value>0</value>
+    </variable>    
     <variable>
       <name>PoolParams_HighestNumWaiters_16037199636422</name>
-      <value>5000</value>
-    </variable>
+      <value>1000</value>
+    </variable> 
     <variable>
       <name>PoolParams_MatchConnectionsSupported_16037199636423</name>
       <value>true</value>
     </variable>
     <variable>
       <name>PoolParams_InitialCapacity_16037199636424</name>
-      <value>5</value>
+      <value>100</value>
     </variable>
     <variable>
       <name>PoolParams_CapacityIncrement_16037199636425</name>
-      <value>5</value>
+      <value>0</value>
     </variable>
     <variable>
       <name>PoolParams_ShrinkingEnabled_16037199636426</name>
-      <value>'true'</value>
+      <value>'false'</value>
     </variable>
     <variable>
       <name>PoolParams_ShrinkFrequencySeconds_16037199636437</name>
@@ -53,11 +53,11 @@
     <variable>
       <name>PoolParams_HighestNumUnavailable_16037199636438</name>
       <value>0</value>
-    </variable>
+    </variable> 
     <variable>
       <name>PoolParams_ConnectionCreationRetryFrequencySeconds_16037199636439</name>
-      <value>0</value>
-    </variable>
+      <value>60</value>
+    </variable> 
     <variable>
       <name>PoolParams_TestFrequencySeconds_160371996364310</name>
       <value>0</value>
@@ -75,6 +75,7 @@
       <value>'false'</value>
     </variable>
 
+    <!--
     <variable>
       <name>ConnectionInstance_eis/casualConnectionFactory_JNDIName_1</name>
       <value>eis/casualConnectionFactory</value>
@@ -95,8 +96,7 @@
       <name>ConfigProperty_portNumber_Value_1</name>
       <value>7771</value>
     </variable>
-
-    <!-- 
+    -->
     <variable>
       <name>ConnectionInstance_eis/anotherCasualConnectionFactory_JNDIName_2</name>
       <value>eis/anotherCasualConnectionFactory</value>
@@ -107,7 +107,7 @@
     </variable>
     <variable>
       <name>ConfigProperty_hostName_Value_2</name>
-      <value>wls-2</value>
+      <value>casual-one</value>
     </variable>
     <variable>
       <name>ConfigProperty_portNumber_Name_2</name>
@@ -115,8 +115,25 @@
     </variable>
     <variable>
       <name>ConfigProperty_portNumber_Value_2</name>
-      <value>7772</value>
-    </variable> -->
+      <value>7771</value>
+    </variable>
+    <!-- -->
+    <variable>
+      <name>ConfigProperty_networkConnectionPoolName_Name_2</name>
+      <value>networkConnectionPoolName</value>
+    </variable>
+    <variable>
+      <name>ConfigProperty_networkConnectionPoolName_Value_2</name>
+      <value>pool-one</value>
+    </variable>
+    <variable>
+      <name>ConfigProperty_networkConnectionPoolSize_Name_2</name>
+      <value>networkConnectionPoolSize</value>
+    </variable>
+    <variable>
+      <name>ConfigProperty_networkConnectionPoolSize_Value_2</name>
+      <value>1</value>
+    </variable> 
     
   </variable-definition>
   <module-override>
@@ -200,6 +217,7 @@
       </variable-assignment>
       <!-- end default pool values for all pools -->
       <!-- pool configuration -->
+      <!--
       <variable-assignment>
         <name>ConnectionInstance_eis/casualConnectionFactory_JNDIName_1</name>
         <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/casualConnectionFactory"]/jndi-name</xpath>
@@ -225,8 +243,8 @@
         <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/casualConnectionFactory"]/connection-properties/properties/property/[name="portNumber"]/value</xpath>
         <origin>planbased</origin>
       </variable-assignment>
+      -->
       <!-- another pool configuration -->
-      <!--
       <variable-assignment>
         <name>ConnectionInstance_eis/anotherCasualConnectionFactory_JNDIName_2</name>
         <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/anotherCasualConnectionFactory"]/jndi-name</xpath>
@@ -252,7 +270,28 @@
         <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/anotherCasualConnectionFactory"]/connection-properties/properties/property/[name="portNumber"]/value</xpath>
         <origin>planbased</origin>
       </variable-assignment>
-      -->
+      <!-- -->
+      <variable-assignment>
+        <name>ConfigProperty_networkConnectionPoolName_Name_2</name>
+        <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/anotherCasualConnectionFactory"]/connection-properties/properties/property/[name="networkConnectionPoolName"]/name</xpath>
+        <origin>planbased</origin>
+      </variable-assignment>
+      <variable-assignment>
+        <name>ConfigProperty_networkConnectionPoolName_Value_2</name>
+        <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/anotherCasualConnectionFactory"]/connection-properties/properties/property/[name="networkConnectionPoolName"]/value</xpath>
+        <origin>planbased</origin>
+      </variable-assignment>
+      <variable-assignment>
+        <name>ConfigProperty_networkConnectionPoolSize_Name_2</name>
+        <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/anotherCasualConnectionFactory"]/connection-properties/properties/property/[name="networkConnectionPoolSize"]/name</xpath>
+        <origin>planbased</origin>
+      </variable-assignment>
+      <variable-assignment>
+        <name>ConfigProperty_networkConnectionPoolSize_Value_2</name>
+        <xpath>/weblogic-connector/outbound-resource-adapter/connection-definition-group/[connection-factory-interface="se.laz.casual.jca.CasualConnectionFactory"]/connection-instance/[jndi-name="eis/anotherCasualConnectionFactory"]/connection-properties/properties/property/[name="networkConnectionPoolSize"]/value</xpath>
+        <origin>planbased</origin>
+      </variable-assignment>
+      
     </module-descriptor>
     <module-descriptor external="false">
       <root-element>connector</root-element>

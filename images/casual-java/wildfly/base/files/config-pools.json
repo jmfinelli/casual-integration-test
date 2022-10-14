@@ -1,0 +1,11 @@
+{
+    "outbound":
+    {
+	"unmanaged": true,
+	"pools":[
+	    {"address": {"host":"casual-one", "port":7771},
+             "size": 1
+	    }
+	]
+    }
+}

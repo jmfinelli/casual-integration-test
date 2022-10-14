@@ -1,4 +1,5 @@
-FROM jboss/wildfly:latest
+#FROM jboss/wildfly:latest
+FROM quay.io/wildfly/wildfly
 
 USER root
 
@@ -12,12 +13,19 @@ RUN /opt/jboss/wildfly/bin/add-user.sh wildfly wildfly1 --silent
 
 RUN mkdir /opt/jboss/wildfly/casual
 
-ENV CASUAL_VERSION 1.0.82-beta
+ENV CASUAL_VERSION 2.2.4-beta
+#ENV CASUAL_VERSION 2.2.0-beta
+ENV CASUAL_CALLER_VERSION 2.2.4
+ENV CASUAL_TEST_APPLICATION_VERSION 1.0.2
+
+#ENV CASUAL_VERSION 2.0.2
+#ENV CASUAL_CALLER_VERSION 2.1.2
+#ENV CASUAL_TEST_APPLICATION_VERSION 1.0.1
+
 ENV CASUAL_HOST=0.0.0.0
 ENV CASUAL_PORT=7771
-ENV CASUAL_CALLER_VERSION 1.2.8
-ENV CASUAL_TEST_APPLICATION_VERSION 1.0.0
-ENV CASUAL_INBOUND_STARTUP_MODE=trigger
+ENV CASUAL_INBOUND_STARTUP_MODE trigger
+ENV LOG_LEVEL=TRACE
 
 COPY files/casual-inbound-handler-api-${CASUAL_VERSION}.jar \
      	files/casual-fielded-annotations-${CASUAL_VERSION}.jar \
@@ -33,6 +41,15 @@ RUN /opt/jboss/wildfly/bin/jboss-cli.sh --command="module add --name=se.laz.casu
 
 COPY files/casual-fields.json /casual-fields.json
 ENV CASUAL_FIELD_TABLE /casual-fields.json
+
+#COPY files/casual-config-reverse-inbound.json /casual-config.json
+#COPY files/casual-config.json /casual-config.json
+#COPY files/config-pools.json /casual-config.json
+#COPY files/config-pools-by-name.json /casual-config.json
+COPY files/casual-config-epoll-unmanaged.json /casual-config.json
+ENV CASUAL_CONFIG_FILE /casual-config.json
+
+ENV CASUAL_DOMAIN_NAME=wildfly
 
 #COPY files/expected-services.json /expected-services.json
 #ENV CASUAL_SERVICES_FILE /expected-services.json
@@ -58,6 +75,9 @@ USER 1001
 EXPOSE 8080 7772 9990
 
 ENV CASUAL_NETWORK_INBOUND_ENABLE_LOGHANDLER=true
+ENV CASUAL_NETWORK_OUTBOUND_ENABLE_LOGHANDLER=true
 ENV CASUAL_CALLER_CONNECTION_FACTORY_JNDI_SEARCH_ROOT=java:/eis
+
+ENV JAVA_OPTS="-XX:+UseG1GC -Xms200M -Xmx200M -XX:MaxHeapSize=200M"
 
 CMD ["/opt/jboss/wildfly/bin/standalone.sh",  "-c", "standalone-full.xml", "--debug", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]

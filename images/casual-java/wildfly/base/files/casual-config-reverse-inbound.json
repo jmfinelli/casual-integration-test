@@ -1,0 +1,8 @@
+{
+  "reverseInbound":[
+    {"address": {"host":"casual-reverse-outbound", "port":7780}}
+  ],
+  "outbound":{
+    "unmanaged": true
+  }
+}

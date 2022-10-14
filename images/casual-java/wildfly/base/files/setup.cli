@@ -1,9 +1,14 @@
 embed-server --server-config=standalone-full.xml --std-out=echo
 
+/subsystem=ejb3:write-attribute(name=in-vm-remote-interface-invocation-pass-by-value, value=false)
+
 set CASUAL_VERSION=${env.CASUAL_VERSION}
 set CASUAL_HOST=${env.CASUAL_HOST}
 set CASUAL_PORT=${env.CASUAL_PORT}
+set LOG_LEVEL=${env.LOG_LEVEL}
 
+# turn off jaeger tracing, it's buggy
+/subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)
 
 # delete ExampleDS
 /subsystem=datasources/data-source=ExampleDS:remove()
@@ -20,11 +25,26 @@ set connectionDefinitionNode=$baseNode/connection-definitions=casual-pool
 $connectionDefinitionNode:add(\
     class-name=se.laz.casual.jca.CasualManagedConnectionFactory,\
     jndi-name=eis/casualConnectionFactoryDefault,\
-    min-pool-size=20, initial-pool-size=20, max-pool-size=20,\
+    min-pool-size=100, initial-pool-size=100, max-pool-size=100,\
     enabled=true)
 
-$connectionDefinitionNode/config-properties=HostName:add(value=$CASUAL_HOST)
-$connectionDefinitionNode/config-properties=PortNumber:add(value=$CASUAL_PORT)
+$connectionDefinitionNode/config-properties=HostName:add(value=casual-one)
+$connectionDefinitionNode/config-properties=PortNumber:add(value=7771)
+$connectionDefinitionNode/config-properties=NetworkConnectionPoolName:add(value=pool-two)
+$connectionDefinitionNode/config-properties=NetworkConnectionPoolSize:add(value=1)
+
+
+set connectionDefinitionNode=$baseNode/connection-definitions=another-casual-pool
+$connectionDefinitionNode:add(\
+    class-name=se.laz.casual.jca.CasualManagedConnectionFactory,\
+    jndi-name=eis/anotherCasualConnectionFactoryDefault,\
+    min-pool-size=100, initial-pool-size=100, max-pool-size=100,\
+    enabled=true)
+
+$connectionDefinitionNode/config-properties=HostName:add(value=casual-one)
+$connectionDefinitionNode/config-properties=PortNumber:add(value=7771)
+$connectionDefinitionNode/config-properties=NetworkConnectionPoolName:add(value=pool-one)
+$connectionDefinitionNode/config-properties=NetworkConnectionPoolSize:add(value=1)
 
 deploy /opt/jboss/wildfly/casual-jca-app-${env.CASUAL_VERSION}.ear
 deploy /opt/jboss/wildfly/casual-caller-app-${env.CASUAL_CALLER_VERSION}.ear

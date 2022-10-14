@@ -1,0 +1,12 @@
+{
+    "outbound":
+    {
+	"unmanaged": true,
+	"pools":[
+	    {
+		"name": "funky-pool",
+		"size": 2
+	    }
+	]
+    }
+}

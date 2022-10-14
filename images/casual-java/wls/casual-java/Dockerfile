@@ -25,14 +25,15 @@ MAINTAINER Bruno Borges <bruno.borges@oracle.com>
 
 USER root
 RUN apt-get update && apt-get -y upgrade && apt-get -y install net-tools && apt-get -y install python && apt-get -y install emacs-nox && apt-get -y install procps && apt-get -y install lsof && apt-get -y install util-linux
+RUN apt-get -y install openjdk-8-jdk
 
 #RUN echo '* - nofile 8196' > /etc/security/limits.conf
 
 RUN mkdir /u01/oracle/casual
 
-ENV CASUAL_VERSION 1.0.82-beta
-ENV CASUAL_CALLER_VERSION 1.2.8
-ENV CASUAL_TEST_APPLICATION_VERSION 1.0.0
+ENV CASUAL_VERSION 2.2.4
+ENV CASUAL_CALLER_VERSION 2.2.4
+ENV CASUAL_TEST_APPLICATION_VERSION 1.0.2
 #ENV CASUAL_INBOUND_STARTUP_MODE trigger
 
 COPY "files/casual-inbound-handler-api-${CASUAL_VERSION}.jar" /u01/oracle/casual/
@@ -41,7 +42,9 @@ COPY "files/casual-service-discovery-extension-${CASUAL_VERSION}.jar" /u01/oracl
 COPY "files/casual-api-${CASUAL_VERSION}.jar" /u01/oracle/casual/
 #COPY "files/casual-inbound-startup-trigger-app-${CASUAL_VERSION}.ear" /u01/oracle/casual/
 COPY files/gson-2.9.0.jar /u01/oracle/casual/
-COPY files/config.json /u01/oracle/casual/
+COPY files/config.json /u01/oracle/casual/config.json
+#COPY files/casual-config-reverse-inbound.json /u01/oracle/casual/config.json
+#COPY files/config-pools.json /u01/oracle/casual/config.json
 
 ENV CASUAL_CONFIG_FILE=/u01/oracle/casual/config.json
 #ENV CASUAL_INBOUND_STARTUP_MODE=trigger
