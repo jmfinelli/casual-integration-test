@@ -1,6 +1,6 @@
 {
   "outbound":{
-    "unmanaged": true
+      "unmanaged": false,
+      "useEpoll": true
   }
 }
-
