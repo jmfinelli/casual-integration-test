@@ -1,0 +1,13 @@
+domain:
+  default:  
+    server:
+      instances: 1
+      restart: false
+  name: core-domain
+  servers:    
+    - instances: 1
+      note: exampleserver
+      arguments: []
+      memberships:
+      path: ${CASUAL_HOME}/example/bin/casual-example-server
+

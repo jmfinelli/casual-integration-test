@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: casual-two
+  labels:
+    app: casual-two
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: casual-two
+  template:
+    metadata:
+      labels:
+        app: casual-two
+    spec:
+      containers:
+      - name: casual
+        image: casual-domain-1.5.13:latest
+        securityContext:
+          capabilities:
+            add:
+              - SYS_PTRACE
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7771
+        - containerPort: 7780
+        env:
+          - name: CASUAL_LOG
+            value: warning | error
