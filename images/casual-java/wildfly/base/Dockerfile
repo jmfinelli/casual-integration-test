@@ -2,12 +2,15 @@
 #FROM quay.io/wildfly/wildfly:latest-jdk11
 #FROM quay.io/wildfly/wildfly:latest-jdk17
 #FROM quay.io/wildfly/wildfly:27.0.0.Final-jdk17
+# Has OOM problem
 FROM quay.io/wildfly/wildfly:26.1.3.Final-jdk17
+# Has OOM problem
+#FROM quay.io/wildfly/wildfly:23.0.2.Final
 
 USER root
 
 RUN yum update-minimal -y
-RUN yum install -y emacs
+#RUN yum install -y emacs
 RUN yum clean all -y
 
 USER 1001
@@ -20,12 +23,11 @@ RUN mkdir /opt/jboss/wildfly/casual
 
 ENV CASUAL_VERSION 2.2.15
 ENV CASUAL_CALLER_VERSION 2.2.7
-ENV CASUAL_TEST_APPLICATION_VERSION 1.0.3
+ENV CASUAL_TEST_APPLICATION_VERSION 1.0.2
 
 ENV CASUAL_HOST=0.0.0.0
 ENV CASUAL_PORT=7771
 ENV CASUAL_INBOUND_STARTUP_MODE trigger
-ENV LOG_LEVEL=TRACE
 
 COPY files/casual-inbound-handler-api-${CASUAL_VERSION}.jar \
      	files/casual-fielded-annotations-${CASUAL_VERSION}.jar \
@@ -79,8 +81,5 @@ EXPOSE 8080 7772 9990
 ENV CASUAL_NETWORK_INBOUND_ENABLE_LOGHANDLER=false
 ENV CASUAL_NETWORK_OUTBOUND_ENABLE_LOGHANDLER=false
 ENV CASUAL_CALLER_CONNECTION_FACTORY_JNDI_SEARCH_ROOT=java:/eis
-
-#ENV JAVA_OPTS="-XX:+UseG1GC -Xms200M -Xmx200M -XX:MaxHeapSize=200M -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=y"
-ENV JAVA_OPTS="-XX:+UseG1GC -Xms200M -Xmx200M -XX:MaxHeapSize=200M"
 
 CMD ["/opt/jboss/wildfly/bin/standalone.sh",  "-c", "standalone-full.xml", "--debug", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]

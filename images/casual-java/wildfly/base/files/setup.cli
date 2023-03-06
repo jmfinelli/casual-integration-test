@@ -10,6 +10,10 @@ set LOG_LEVEL=${env.LOG_LEVEL}
 # turn off jaeger tracing, it's buggy
 /subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)
 
+# remove active mq
+#/subsystem=messaging-activemq:remove()
+#/extension=org.wildfly.extension.messaging-activemq:remove()
+
 # delete ExampleDS
 /subsystem=datasources/data-source=ExampleDS:remove()
 /subsystem=ee/service=default-bindings:write-attribute(name=datasource,value=undefined)

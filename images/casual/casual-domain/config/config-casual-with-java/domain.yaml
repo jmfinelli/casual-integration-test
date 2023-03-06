@@ -25,3 +25,15 @@ domain:
       instances: 1
       note: nginx frontend
       path: ${CASUAL_HOME}/nginx/sbin/nginx
+  queue:
+    groups:
+      - alias: QS_TEST
+        queues:
+        - name: QS_TEST.testQueue
+          retry:
+            count: 3
+            delay: 60
+        - name: QS_TEST.anotherTestQueue
+          retry:
+            count: 3
+            delay: 60

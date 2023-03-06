@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<deployment-plan xmlns="http://xmlns.oracle.com/weblogic/deployment-plan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.oracle.com/weblogic/deployment-plan http://xmlns.oracle.com/weblogic/deployment-plan/1.0/deployment-plan.xsd" global-variables="false">
-  <application-name>casual-inbound-startup-trigger-app</application-name>    
-  <config-root>/u01/oracle/plan</config-root>
-</deployment-plan>

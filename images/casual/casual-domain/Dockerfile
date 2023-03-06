@@ -1,4 +1,4 @@
-from casual/middleware:1.5.11
+from casual/middleware:1.5.13
 
 MAINTAINER flurig <flurig@localhost>
 
@@ -9,7 +9,7 @@ LABEL name="casual-domain" \
 USER root
 
 RUN yum update-minimal -y
-RUN yum install -y strace gettext
+RUN yum install -y strace gettext lsof netstat
 RUN yum clean all -y
 
 USER 1001
