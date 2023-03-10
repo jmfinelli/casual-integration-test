@@ -1,5 +1,5 @@
-FROM wildfly-base-2.2.15:latest
-#FROM wildfly-base-connects-to-wildfly-inbound-2.2.15:latest
+#FROM wildfly-base-2.2.15:latest
+FROM wildfly-base-connects-to-wildfly-inbound-2.2.15:latest
 
 ENV JAVA_FORWARD_SERVICE_NAME casual/example/echo
 

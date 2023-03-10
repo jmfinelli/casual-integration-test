@@ -45,8 +45,8 @@ $connectionDefinitionNode:add(\
 #    min-pool-size=100, initial-pool-size=100, max-pool-size=100,\
 #    enabled=true)
 
-$connectionDefinitionNode/config-properties=HostName:add(value=casual-one)
-$connectionDefinitionNode/config-properties=PortNumber:add(value=7771)
+$connectionDefinitionNode/config-properties=HostName:add(value=wildfly-inbound)
+$connectionDefinitionNode/config-properties=PortNumber:add(value=7772)
 $connectionDefinitionNode/config-properties=NetworkConnectionPoolName:add(value=pool-one)
 $connectionDefinitionNode/config-properties=NetworkConnectionPoolSize:add(value=1)
 
