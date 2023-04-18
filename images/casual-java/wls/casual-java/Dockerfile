@@ -32,24 +32,25 @@ RUN apt-get -y install telnet
 
 RUN mkdir /u01/oracle/casual
 
-ENV CASUAL_VERSION 2.2.11
-ENV CASUAL_CALLER_VERSION 2.2.6
+ENV CASUAL_VERSION 2.2.20
+ENV CASUAL_CALLER_VERSION 2.2.8
 ENV CASUAL_TEST_APPLICATION_VERSION 1.0.2
 ENV CASUAL_INBOUND_STARTUP_MODE trigger
+ENV GSON_VERSION 2.10.1
 
 COPY "files/casual-inbound-handler-api-${CASUAL_VERSION}.jar" /u01/oracle/casual/
 COPY "files/casual-fielded-annotations-${CASUAL_VERSION}.jar" /u01/oracle/casual/
 COPY "files/casual-service-discovery-extension-${CASUAL_VERSION}.jar" /u01/oracle/casual/
 COPY "files/casual-api-${CASUAL_VERSION}.jar" /u01/oracle/casual/
 COPY "files/casual-inbound-startup-trigger-app-${CASUAL_VERSION}.ear" /u01/oracle/casual/
-COPY files/gson-2.9.0.jar /u01/oracle/casual/
+COPY files/gson-${GSON_VERSION}.jar /u01/oracle/casual/
 COPY files/config.json /u01/oracle/casual/config.json
 #COPY files/casual-config-reverse-inbound.json /u01/oracle/casual/config.json
 
 ENV CASUAL_CONFIG_FILE=/u01/oracle/casual/config.json
 ENV CASUAL_DOMAIN_NAME=wdlocal
 
-ENV CLASSPATH="/u01/oracle/casual/casual-inbound-handler-api-${CASUAL_VERSION}.jar:/u01/oracle/casual/casual-service-discovery-extension-${CASUAL_VERSION}.jar:/u01/oracle/casual/casual-fielded-annotations-${CASUAL_VERSION}.jar:/u01/oracle/casual/casual-api-${CASUAL_VERSION}.jar:/u01/oracle/casual/gson-2.9.0.jar"
+ENV CLASSPATH="/u01/oracle/casual/casual-inbound-handler-api-${CASUAL_VERSION}.jar:/u01/oracle/casual/casual-service-discovery-extension-${CASUAL_VERSION}.jar:/u01/oracle/casual/casual-fielded-annotations-${CASUAL_VERSION}.jar:/u01/oracle/casual/casual-api-${CASUAL_VERSION}.jar:/u01/oracle/casual/gson-${GSON_VERSION}.jar"
 #ENV JAVA_OPTIONS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder \
 #                -Djava.rmi.server.hostname=127.0.0.1 \
 #                -Dcom.sun.management.jmxremote.port=9090 \
@@ -123,12 +124,7 @@ RUN wlst.sh /u01/oracle/app-deploy.py
 # Create JTA datasource for sample application database.
 RUN wlst.sh /u01/oracle/add-datasource.py
 
-#COPY "files/casual-caller-app-${CASUAL_CALLER_VERSION}.ear" /u01/oracle/user_projects/domains/base_domain/autodeploy/
-
 ENV JAVA_FORWARD_ENV_NAME "casual/example/echo"
-
-# Copy war file for auto deployment to ensure persistence.xml is initialised. Don't happen with offline mode.
-# COPY files/casual-test-app-${CASUAL_TEST_APPLICATION_VERSION}.war /u01/oracle/user_projects/domains/base_domain/autodeploy/
 
 USER root
 

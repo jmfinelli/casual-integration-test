@@ -107,7 +107,7 @@
     </variable>
     <variable>
       <name>ConfigProperty_hostName_Value_2</name>
-      <value>casual-one</value>
+      <value>0.0.0.0</value>
     </variable>
     <variable>
       <name>ConfigProperty_portNumber_Name_2</name>
