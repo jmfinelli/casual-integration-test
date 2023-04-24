@@ -1,0 +1,57 @@
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+/subsystem=ejb3:write-attribute(name=in-vm-remote-interface-invocation-pass-by-value, value=false)
+
+set CASUAL_VERSION=${env.CASUAL_VERSION}
+set CASUAL_HOST=${env.CASUAL_HOST}
+set CASUAL_PORT=${env.CASUAL_PORT}
+set LOG_LEVEL=${env.LOG_LEVEL}
+
+# turn off jaeger tracing, it's buggy
+/subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)
+
+# remove active mq
+#/subsystem=messaging-activemq:remove()
+#/extension=org.wildfly.extension.messaging-activemq:remove()
+
+# delete ExampleDS
+/subsystem=datasources/data-source=ExampleDS:remove()
+/subsystem=ee/service=default-bindings:write-attribute(name=datasource,value=undefined)
+
+# Global module
+/subsystem=ee:list-add(name=global-modules, value={name=se.laz.casual})
+
+# configure casual RA
+set baseNode=/subsystem=resource-adapters/resource-adapter=casual-jca
+$baseNode:add(archive=casual-jca-app-$CASUAL_VERSION.ear#casual-jca.rar,transaction-support=XATransaction)
+
+set connectionDefinitionNode=$baseNode/connection-definitions=casual-pool
+$connectionDefinitionNode:add(\
+    class-name=se.laz.casual.jca.CasualManagedConnectionFactory,\
+    jndi-name=eis/casualConnectionFactoryDefault,\
+    min-pool-size=100, initial-pool-size=100, max-pool-size=100,\
+    enabled=true)
+
+$connectionDefinitionNode/config-properties=HostName:add(value=$CASUAL_HOST)
+$connectionDefinitionNode/config-properties=PortNumber:add(value=$CASUAL_PORT)
+$connectionDefinitionNode/config-properties=NetworkConnectionPoolName:add(value=$CASUAL_HOST-pool)
+$connectionDefinitionNode/config-properties=NetworkConnectionPoolSize:add(value=1)
+
+deploy /opt/jboss/wildfly/casual-jca-app-${env.CASUAL_VERSION}.ear
+deploy /opt/jboss/wildfly/casual-caller-app-${env.CASUAL_CALLER_VERSION}.ear
+
+###
+data-source add --name=order --driver-name=h2 --enabled=true --jndi-name=java:jboss/datasources/order --connection-url=jdbc:h2:mem:order;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false --user-name=sa --password=sa --use-java-context=true --statistics-enabled=${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}
+
+#/subsystem=logging/logger=io.netty:add(level=INFO)
+#/subsystem=logging/logger=se.laz.casual:add(level=ALL)
+
+#/subsystem=logging/file-handler=CustomFileHandler:add(file={"path"=>"casual.log","relative-to"=>"jboss.server.log.dir"})
+#/subsystem=logging/logger=se.laz.casual:assign-handler(name="CustomFileHandler")
+#/subsystem=logging/logger=io.netty:assign-handler(name="CustomFileHandler")
+
+# Specifies whether or not this logger should send its output to its parent Logger
+#/subsystem=logging/logger=se.laz.casual:write-attribute(name="use-parent-handlers", value="false")
+#/subsystem=logging/logger=io.netty:write-attribute(name="use-parent-handlers", value="false")
+
+stop-embedded-server

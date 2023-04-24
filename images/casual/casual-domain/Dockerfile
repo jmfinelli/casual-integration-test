@@ -9,7 +9,7 @@ LABEL name="casual-domain" \
 USER root
 
 RUN yum update-minimal -y
-RUN yum install -y strace gettext lsof netstat
+#RUN yum install -y strace gettext lsof netstat
 RUN yum clean all -y
 
 USER 1001
