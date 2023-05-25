@@ -1,7 +1,7 @@
 FROM wildfly-base:latest
 
 ENV JAVA_FORWARD_SERVICE_NAME casual/example/echo
-ENV CASUAL_HOST=0.0.0.0
+ENV CASUAL_HOST=localhost
 ENV CASUAL_PORT=7771
 
 COPY files/setup.cli /opt/jboss/wildfly

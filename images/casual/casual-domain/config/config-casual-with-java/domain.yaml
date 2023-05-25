@@ -8,7 +8,7 @@ domain:
       groups:
         - alias: "casual-inbound"
           connections:
-            - address: 0.0.0.0:7771
+            - address: localhost:7771
   name: test-domain
   servers:    
     - instances: 1

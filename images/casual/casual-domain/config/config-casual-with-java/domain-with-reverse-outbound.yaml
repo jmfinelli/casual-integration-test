@@ -8,7 +8,7 @@ domain:
       groups:
         - alias: "casual-inbound"
           connections:
-            - address: 0.0.0.0:7771
+            - address: localhost:7771
               discovery:
                 forward: true
               note: "discovery will be forward to all outbounds"
@@ -18,12 +18,12 @@ domain:
           - alias: "primary"
             note: "listen for connection from reverse inbound - then treat it as a regular outbound"
             connections:
-              - address: "0.0.0.0:7780"
+              - address: "localhost:7780"
                 note: "one of possible many listening addresses."
           - alias: "secondary"
             note: "onther instance (proces) that handles (multiplexed) traffic on it's own"
             connections:
-              - address: "0.0.0.0:7781"
+              - address: "localhost:7781"
                 note: "one of possible many listening addresses."
   name: test-domain
   servers:    

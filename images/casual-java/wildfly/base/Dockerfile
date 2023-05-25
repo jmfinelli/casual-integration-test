@@ -57,4 +57,4 @@ ENV CASUAL_NETWORK_INBOUND_ENABLE_LOGHANDLER=false
 ENV CASUAL_NETWORK_OUTBOUND_ENABLE_LOGHANDLER=false
 ENV CASUAL_CALLER_CONNECTION_FACTORY_JNDI_SEARCH_ROOT=java:/eis
 
-CMD ["/opt/jboss/wildfly/bin/standalone.sh",  "-c", "standalone-full.xml", "--debug", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+CMD ["/opt/jboss/wildfly/bin/standalone.sh",  "-c", "standalone-full.xml", "--debug", "-b", "localhost", "-bmanagement", "localhost"]
