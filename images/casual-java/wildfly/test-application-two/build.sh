@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 cd "$(dirname "$0")" && \
-docker build . -t wildfly-casual-java-test-application-using-java-casual
+minikube image build . -t wildfly-casual-java-test-application-using-java-casual
