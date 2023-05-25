@@ -16,8 +16,9 @@ spec:
     spec:
       containers:
       - name: wildfly
-        image: wildfly-casual-java-test-application-using-local-casual:latest
-        imagePullPolicy: Never
+        image: localhost/wildfly-casual-java-test-application-using-local-casual:latest
+        #image: wildfly-casual-java-test-application-using-local-casual:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 7772
         - containerPort: 9990
@@ -31,12 +32,12 @@ spec:
           - name: JAVA_FORWARD_SERVICE_NAME
             value: casual/example/advertised/echo
       - name: casual
-        image: casual-domain-1.5.13:latest
+        image: localhost/casual-domain-1.5.13:latest
         securityContext:
           capabilities:
             add:
               - SYS_PTRACE
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         ports:
         - containerPort: 7771
         env:
