@@ -1,4 +1,4 @@
-FROM wildfly-base:latest
+FROM localhost/wildfly-base:myTag
 
 ENV JAVA_FORWARD_SERVICE_NAME casual/example/echo
 ENV CASUAL_HOST=localhost

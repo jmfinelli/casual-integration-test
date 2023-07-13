@@ -1,3 +1,6 @@
+# WARNING! This is not gonna work with PODMAN
+### because of [this](https://github.com/kubernetes/minikube/issues/14932) issue
+
 # casual-integration-test
 casual integration testing running on minikube using podman rootless
 
@@ -13,6 +16,8 @@ minikube dashboard
 ```
 
 ## Building images
+
+NOTE: If there are problems with minikube + podman, refer to this [issue](https://github.com/kubernetes/minikube/issues/14018)
 
 This builds a casual-domain-1.5.13 image
 
@@ -45,7 +50,7 @@ Expose port 7772 as wildfly-inbound, that service name is used in the second tes
 
 Create the 2nd pod which runs wildfly only and where the pool is configured to go towards wildfly-inbound:7772.
 
-`kubectl replace --force -f domain-wildfly-and-casual-two.yaml`
+`kubectl replace --force -f casual-java/wildfly/k8s/domain-wildfly-and-casual-two.yaml`
 
 Expose port 8080 for that deployment:
 
