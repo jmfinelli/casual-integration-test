@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+if [[ ! -e wildfly-26.1.3.Final.zip ]]; then
+  wget https://github.com/wildfly/wildfly/releases/download/26.1.3.Final/wildfly-26.1.3.Final.zip
+fi
+
+if [[ -d wildfly-26.1.3.Final ]]; then
+  rm -rf wildfly-26.1.3.Final
+fi
+
+unzip wildfly-26.1.3.Final.zip
+
+bin/add-user.sh wildfly wildfly1 --silent
+mkdir wildfly-26.1.3.Final/casual
+
+export CASUAL_VERSION=2.2.15
+export CASUAL_CALLER_VERSION=2.2.7
+export CASUAL_TEST_APPLICATION_VERSION=1.0.2
+export CASUAL_INBOUND_STARTUP_MODE=trigger
+
+cp ../images/casual-java/wildfly/base/files/casual-inbound-handler-api-${CASUAL_VERSION}.jar wildfly-26.1.3.Final/casual/
+cp ../images/casual-java/wildfly/base/files/casual-fielded-annotations-${CASUAL_VERSION}.jar wildfly-26.1.3.Final/casual/
+cp ../images/casual-java/wildfly/base/files/casual-service-discovery-extension-${CASUAL_VERSION}.jar wildfly-26.1.3.Final/casual/
+cp ../images/casual-java/wildfly/base/files/casual-api-${CASUAL_VERSION}.jar wildfly-26.1.3.Final/casual/
+cp ../images/casual-java/wildfly/base/files/gson-2.10.1.jar wildfly-26.1.3.Final/casual/
+
+export BASE_PATH=$(pwd)
+
+wildfly-26.1.3.Final/bin/jboss-cli.sh --echo-command --commands="embed-server --server-config=standalone-full.xml, module add --name=se.laz.casual --resources=$BASE_PATH/wildfly-26.1.3.Final/casual/casual-inbound-handler-api-${CASUAL_VERSION}.jar:$BASE_PATH/wildfly-26.1.3.Final/casual/casual-fielded-annotations-${CASUAL_VERSION}.jar:$BASE_PATH/wildfly-26.1.3.Final/casual/casual-service-discovery-extension-${CASUAL_VERSION}.jar:$BASE_PATH/wildfly-26.1.3.Final/casual/casual-api-${CASUAL_VERSION}.jar:$BASE_PATH/wildfly-26.1.3.Final/casual/gson-2.10.1.jar --dependencies=javaee.api\,sun.jdk"
+
+cp ../images/casual-java/wildfly/base/files/casual-fields.json ./casual-fields.json
+export CASUAL_FIELD_TABLE=$(pwd)/casual-fields.json
+cp ../images/casual-java/wildfly/base/files/casual-config.json ./casual-config.json
+export CASUAL_CONFIG_FILE=$(pwd)/casual-config.json
+
+export CASUAL_DOMAIN_NAME=wildfly
+export WILDFLY_HOME=$(pwd)/wildfly-26.1.3.Final
+
+cp ../images/casual-java/wildfly/base/files/casual-jca-app-${CASUAL_VERSION}.ear wildfly-26.1.3.Final/
+cp ../images/casual-java/wildfly/base/files/casual-caller-app-${CASUAL_CALLER_VERSION}.ear wildfly-26.1.3.Final/
+
+chmod -R g=u wildfly-26.1.3.Final
+
+export CASUAL_NETWORK_INBOUND_ENABLE_LOGHANDLER=false
+export CASUAL_NETWORK_OUTBOUND_ENABLE_LOGHANDLER=false
+export CASUAL_CALLER_CONNECTION_FACTORY_JNDI_SEARCH_ROOT=java:/eis

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+export CASUAL_VERSION=2.2.15
+export CASUAL_CALLER_VERSION=2.2.7
+export CASUAL_TEST_APPLICATION_VERSION=1.0.2
+export CASUAL_INBOUND_STARTUP_MODE=trigger
+export CASUAL_DOMAIN_NAME=wildfly
+export WILDFLY_HOME=$(pwd)/wildfly-26.1.3.Final
+export CASUAL_FIELD_TABLE=$(pwd)/casual-fields.json
+export CASUAL_CONFIG_FILE=$(pwd)/casual-config.json
+export CASUAL_NETWORK_INBOUND_ENABLE_LOGHANDLER=false
+export CASUAL_NETWORK_OUTBOUND_ENABLE_LOGHANDLER=false
+export CASUAL_CALLER_CONNECTION_FACTORY_JNDI_SEARCH_ROOT=java:/eis
+export BASE_PATH=$(pwd)/wildfly-26.1.3.Final_test_app_1
+
+rm -rf wildfly-26.1.3.Final_test_app_1
+
+export JAVA_FORWARD_SERVICE_NAME=casual/example/echo
+export CASUAL_HOST=localhost
+export CASUAL_PORT=7771
+
+cp -r wildfly-26.1.3.Final wildfly-26.1.3.Final_test_app_1
+cp ../images/casual-java/wildfly/test-application/files/setup.cli wildfly-26.1.3.Final_test_app_1
+wildfly-26.1.3.Final_test_app_1/bin/jboss-cli.sh --file=wildfly-26.1.3.Final_test_app_1/setup.cli
+
+cp ../images/casual-java/wildfly/test-application/files/casual-test-app-1.0.2.war wildfly-26.1.3.Final_test_app_1/standalone/deployments
+cp ../images/casual-java/wildfly/test-application/files/casual-inbound-startup-trigger-app-2.2.15.ear wildfly-26.1.3.Final_test_app_1/standalone/deployments
+
+echo "JAVA_OPTS=\"$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n\"" >> wildfly-26.1.3.Final_test_app_1/bin/standalone.conf
+
+./wildfly-26.1.3.Final_test_app_1/bin/standalone.sh -c standalone-full.xml -b 0.0.0.0 -bmanagement 0.0.0.0

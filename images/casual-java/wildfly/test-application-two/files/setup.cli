@@ -37,8 +37,8 @@ $connectionDefinitionNode/config-properties=PortNumber:add(value=$CASUAL_PORT)
 $connectionDefinitionNode/config-properties=NetworkConnectionPoolName:add(value=$CASUAL_HOST-pool)
 $connectionDefinitionNode/config-properties=NetworkConnectionPoolSize:add(value=1)
 
-deploy /opt/jboss/wildfly/casual-jca-app-${env.CASUAL_VERSION}.ear
-deploy /opt/jboss/wildfly/casual-caller-app-${env.CASUAL_CALLER_VERSION}.ear
+deploy ${env.BASE_PATH}/casual-jca-app-${env.CASUAL_VERSION}.ear
+deploy ${env.BASE_PATH}/casual-caller-app-${env.CASUAL_CALLER_VERSION}.ear
 
 ###
 data-source add --name=order --driver-name=h2 --enabled=true --jndi-name=java:jboss/datasources/order --connection-url=jdbc:h2:mem:order;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false --user-name=sa --password=sa --use-java-context=true --statistics-enabled=${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}
@@ -53,5 +53,12 @@ data-source add --name=order --driver-name=h2 --enabled=true --jndi-name=java:jb
 # Specifies whether or not this logger should send its output to its parent Logger
 #/subsystem=logging/logger=se.laz.casual:write-attribute(name="use-parent-handlers", value="false")
 #/subsystem=logging/logger=io.netty:write-attribute(name="use-parent-handlers", value="false")
+
+# Enables transactions statistics
+/subsystem=transactions:write-attribute(name=statistics-enabled,value=true)
+
+# Transactions TRACE
+/subsystem=logging/console-handler=CONSOLE:write-attribute(name=level,value=TRACE)
+/subsystem=logging/logger=com.arjuna:write-attribute(name=level,value=TRACE)
 
 stop-embedded-server
