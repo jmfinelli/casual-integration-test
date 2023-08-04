@@ -24,7 +24,9 @@ export CASUAL_INBOUND_PORT=7774
 
 cp -r wildfly-26.1.3.Final wildfly-26.1.3.Final_test_app_2
 wildfly-26.1.3.Final_test_app_1/bin/add-user.sh wildfly wildfly1 --silent
-cp ../images/casual-java/wildfly/test-application-two/files/setup.cli wildfly-26.1.3.Final_test_app_2
+cp ../images/casual-java/wildfly/test-application-two/files/setup.cli wildfly-26.1.3.Final_test_app_2/setupTemp.cli
+sed '2 a/system-property=jboss.tx.node.id:add(value=2)' wildfly-26.1.3.Final_test_app_2/setupTemp.cli >> wildfly-26.1.3.Final_test_app_2/setup.cli
+rm wildfly-26.1.3.Final_test_app_2/setupTemp.cli
 wildfly-26.1.3.Final_test_app_2/bin/jboss-cli.sh --file=wildfly-26.1.3.Final_test_app_2/setup.cli
 
 cp ../images/casual-java/wildfly/test-application-two/files/casual-test-app-1.0.2.war wildfly-26.1.3.Final_test_app_2/standalone/deployments
