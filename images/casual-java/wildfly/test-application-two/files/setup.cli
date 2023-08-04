@@ -5,6 +5,7 @@ embed-server --server-config=standalone-full.xml --std-out=echo
 set CASUAL_VERSION=${env.CASUAL_VERSION}
 set CASUAL_HOST=${env.CASUAL_HOST}
 set CASUAL_PORT=${env.CASUAL_PORT}
+set CASUAL_INBOUND_PORT=${env.CASUAL_INBOUND_PORT}
 set LOG_LEVEL=${env.LOG_LEVEL}
 
 # turn off jaeger tracing, it's buggy
@@ -24,6 +25,7 @@ set LOG_LEVEL=${env.LOG_LEVEL}
 # configure casual RA
 set baseNode=/subsystem=resource-adapters/resource-adapter=casual-jca
 $baseNode:add(archive=casual-jca-app-$CASUAL_VERSION.ear#casual-jca.rar,transaction-support=XATransaction)
+$baseNode/config-properties=InboundServerPort:add(value=$CASUAL_INBOUND_PORT)
 
 set connectionDefinitionNode=$baseNode/connection-definitions=casual-pool
 $connectionDefinitionNode:add(\

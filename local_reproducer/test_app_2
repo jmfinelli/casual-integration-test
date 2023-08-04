@@ -19,9 +19,11 @@ rm -rf wildfly-26.1.3.Final_test_app_2
 
 export JAVA_FORWARD_SERVICE_NAME=casual/example/echo
 export CASUAL_HOST=localhost
-export CASUAL_PORT=7772
+export CASUAL_PORT=7773
+export CASUAL_INBOUND_PORT=7774
 
 cp -r wildfly-26.1.3.Final wildfly-26.1.3.Final_test_app_2
+wildfly-26.1.3.Final_test_app_1/bin/add-user.sh wildfly wildfly1 --silent
 cp ../images/casual-java/wildfly/test-application-two/files/setup.cli wildfly-26.1.3.Final_test_app_2
 wildfly-26.1.3.Final_test_app_2/bin/jboss-cli.sh --file=wildfly-26.1.3.Final_test_app_2/setup.cli
 
