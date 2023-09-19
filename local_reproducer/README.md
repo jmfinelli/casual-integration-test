@@ -7,6 +7,8 @@ First, run `. base_script`. Then, in two different shell, run: `. test_app_1` an
 Check what ports are opened
 `netstat -lntu`
 
+NOTE: Make sure that the file `curl-data` is in the folder where you will run the following two commands.
+
 To start a transaction:
 `curl -d @curl-data -H content-type:application/casual-x-octet http://0.0.0.0:8080/casual/javaEcho`
 
